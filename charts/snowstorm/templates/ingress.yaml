@@ -1,0 +1,30 @@
+{{- $fullName := include "snowstorm.fullname" . -}}
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-ingress
+  labels:
+    {{- include "snowstorm.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-b
+                port:
+                  number: {{ .Values.snowstorm.service.port | default 8080 }}
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-browser
+                port:
+                  number: {{ .Values.browser.service.port | default 80 }}
+{{- end -}}
