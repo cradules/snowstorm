@@ -100,7 +100,7 @@ browser:
     pullPolicy: IfNotPresent
   service:
     enabled: true
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
   resources: {}
     # Uncomment and adjust as needed
